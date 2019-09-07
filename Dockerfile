@@ -54,7 +54,7 @@ RUN vim -c 'PlugInstall | qa' \
     && mkdir -p /root/.config/coc/extensions \
     && cd /root/.config/coc/extensions \
     && if [ ! -f package.json ]; then echo '{"dependencies":{}}'> package.json; fi \
-    && yarn add coc-java coc-python coc-json coc-yaml coc-solargraph coc-pairs coc-phpls coc-tsserver
+    && yarn add coc-java coc-python coc-json coc-yaml coc-solargraph coc-pairs coc-phpls coc-tsserver coc-rls
 # install pip and various packages
 RUN pip3 install --upgrade pip
 RUN pip3 install \
