@@ -41,6 +41,13 @@ describe 'My Dockerfile' do
             its(:exit_status) { should eq 0 }
           end
         end
+        describe 'coc extensions are installed' do
+          describe command('cd /root/.config/coc/extensions; yarn list --pattern coc --depth=0') do
+            ['coc-java', 'coc-json', 'coc-pairs', 'coc-phpls', 'coc-python', 'coc-rls', 'coc-solargraph', 'coc-tsserver', 'coc-yaml'].each do |extension|
+              its(:stdout) { should match(extension) }
+            end
+          end
+        end
       end
       describe 'rust works' do
         ['cargo', 'rustc'].each do |cmd|
