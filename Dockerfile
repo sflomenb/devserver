@@ -18,10 +18,6 @@ RUN apt-get upgrade && apt-get update && apt-get install -y \
     wget \
     zsh \
     && apt-get build-dep -y vim
-    #libncurses5-dev libgnome2-dev libgnomeui-dev \
-    #libgtk2.0-dev libatk1.0-dev libbonoboui2-dev \
-    #libcairo2-dev libx11-dev libxpm-dev libxt-dev python-dev \
-    #python3-dev ruby-dev lua5.1 libperl-dev
 RUN chsh -s /usr/bin/zsh
 # install rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
