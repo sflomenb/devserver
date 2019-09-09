@@ -51,7 +51,7 @@ describe 'My Dockerfile' do
       end
       describe 'rust works' do
         ['cargo', 'rustc'].each do |cmd|
-          describe command('#{cmd} --version') do
+          describe command("/root/.cargo/bin/#{cmd} --version") do
             its (:exit_status) { should eq 0 }
           end
         end
