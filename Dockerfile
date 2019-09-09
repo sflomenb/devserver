@@ -75,6 +75,12 @@ RUN git clone https://github.com/git/git.git official_git \
         's#/usr/local/share/git-core/contrib/diff-highlight/diff-highlight#/usr/local/share/diff-highlight/diff-highlight#' \
         /root/.gitconfig && cd - \
     && rm -rf official_git
+# install terraform
+RUN apt-get install unzip \
+    && wget https://releases.hashicorp.com/terraform/0.12.8/terraform_0.12.8_linux_amd64.zip \
+    && unzip terraform_0.12.8_linux_amd64.zip \
+    && mv terraform /usr/local/bin/ \
+    && apt-get --purge remove -y unzip
 # set timezone
 ENV TZ=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

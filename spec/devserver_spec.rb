@@ -69,6 +69,11 @@ describe 'My Dockerfile' do
           end
         end
       end
+      describe 'terraform is installed' do
+        describe command('terraform --version') do
+          its(:exit_status) { should eq 0 }
+        end
+      end
     end
   end
 end
