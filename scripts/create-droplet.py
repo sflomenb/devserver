@@ -36,7 +36,7 @@ def get_droplet(name):
     print('Unable to get droplet with name ' + name)
 
 def droplet_on(droplet_id):
-    req = requests.get(BASE + '/v2/droplets/' + droplet_id,
+    req = requests.get(BASE + '/v2/droplets/' + str(droplet_id),
         headers=HEADERS)
     req.raise_for_status()
     return req.json()['status'] == 'active'
