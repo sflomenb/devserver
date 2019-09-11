@@ -49,7 +49,6 @@ def wait_for_droplet(droplet_id):
         time.sleep(10)
     print('Droplet ' + droplet_id + ' is off')
 
-
 def delete(droplet_id):
     req = requests.delete(BASE + '/v2/droplets/' + droplet_id,
         headers=HEADERS)
@@ -60,7 +59,7 @@ def destroy_droplet():
 
     droplet_id = get_droplet(DROPLET_NAME)
 
-    #power_off(droplet_id)
+    power_off(droplet_id)
     wait_for_droplet(droplet_id)
     delete(droplet_id)
 
