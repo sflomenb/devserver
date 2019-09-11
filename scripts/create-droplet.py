@@ -85,7 +85,7 @@ def create_droplet():
     return create_droplet_req.json()['droplet']
 
 def get_droplet_ip_address(droplet_data):
-    ip_addr = droplet_data['networks']['v4']['ip_address']
+    ip_addr = droplet_data['networks']['v4'][0]['ip_address']
     print(ip_addr)
 
 def main():
