@@ -75,7 +75,7 @@ sudo ufw allow 60000:60020/udp
 
     return payload
 
-def create_droplet(payload):
+def create_droplet():
 
     create_droplet_req = requests.post(BASE + "/v2/droplets",
         headers=HEADERS,
