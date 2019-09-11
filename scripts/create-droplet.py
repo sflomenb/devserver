@@ -32,7 +32,7 @@ def get_droplet(name):
     data = req.json()
     for droplet in data.get('droplets'):
         if droplet.get('name') == name:
-            return str(droplet.get('id'))
+            return droplet
     print('Unable to get droplet with name ' + name)
 
 def droplet_on(droplet_id):
@@ -98,9 +98,10 @@ def main():
 
     HEADERS = {'Authorization': 'Bearer ' + TOKEN}
 
-    if not get_droplet(DROPLET_NAME):
+    droplet_data = get_droplet(DROPLET_NAME)
+    if not droplet_data:
         print('Creating droplet')
-        data = create_droplet()
+        droplet_data = create_droplet()
         droplet_id = data.get('id')
         wait_for_droplet(droplet_id)
         add_droplet_to_firewall(get_firewall(), droplet_id)
