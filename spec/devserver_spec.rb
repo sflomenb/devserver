@@ -71,6 +71,7 @@ describe 'My Dockerfile' do
       end
       describe 'terraform is installed' do
         describe command('terraform --version') do
+          its(:stdout) { should match('v0.12.8') }
           its(:exit_status) { should eq 0 }
         end
       end

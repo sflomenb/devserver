@@ -76,11 +76,13 @@ RUN git clone https://github.com/git/git.git official_git \
         /root/.gitconfig && cd - \
     && rm -rf official_git
 # install terraform
-RUN apt-get install unzip \
-    && wget https://releases.hashicorp.com/terraform/0.12.8/terraform_0.12.8_linux_amd64.zip \
-    && unzip terraform_0.12.8_linux_amd64.zip \
+RUN VERSION='0.12.8' \
+    && apt-get install unzip \
+    && wget https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip \
+    && unzip terraform_${VERSION}_linux_amd64.zip \
     && mv terraform /usr/local/bin/ \
-    && apt-get --purge remove -y unzip
+    && apt-get --purge remove -y unzip \
+    && rm terraform_${VERSION}_linux_amd64.zip
 # set timezone
 ENV TZ=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
