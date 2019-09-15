@@ -43,7 +43,7 @@ describe 'My Dockerfile' do
         end
         describe 'coc extensions are installed' do
           describe command('cd /root/.config/coc/extensions; yarn list --pattern coc --depth=0') do
-            ['coc-java', 'coc-json', 'coc-pairs', 'coc-phpls', 'coc-python', 'coc-rls', 'coc-solargraph', 'coc-tsserver', 'coc-yaml'].each do |extension|
+            ['coc-go', 'coc-java', 'coc-json', 'coc-pairs', 'coc-phpls', 'coc-python', 'coc-rls', 'coc-solargraph', 'coc-tsserver', 'coc-yaml'].each do |extension|
               its(:stdout) { should match(extension) }
             end
           end
@@ -73,6 +73,16 @@ describe 'My Dockerfile' do
         describe command('terraform --version') do
           its(:stdout) { should match('v0.12.8') }
           its(:exit_status) { should eq 0 }
+        end
+      end
+      describe 'go is installed' do
+        describe file('/usr/local/go/bin') do
+          it {should exist }
+          it {should be_directory }
+        end
+        describe command('/usr/local/go/bin/go version') do
+          its(:exit_status) { should eq 0 }
+          its(:stdout) { should match('go version go1.13') }
         end
       end
     end

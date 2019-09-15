@@ -51,6 +51,7 @@ RUN vim -c 'PlugInstall | qa' \
     && cd /root/.config/coc/extensions \
     && if [ ! -f package.json ]; then echo '{"dependencies":{}}'> package.json; fi \
     && yarn add \
+    coc-go \
     coc-java \
     coc-json \
     coc-pairs \
@@ -83,6 +84,11 @@ RUN VERSION='0.12.8' \
     && mv terraform /usr/local/bin/ \
     && apt-get --purge remove -y unzip \
     && rm terraform_${VERSION}_linux_amd64.zip
+# install go
+RUN VERSION='1.13' \
+    && wget https://dl.google.com/go/go${VERSION}.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go${VERSION}.linux-amd64.tar.gz \
+    && rm go${VERSION}.linux-amd64.tar.gz
 # set timezone
 ENV TZ=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
