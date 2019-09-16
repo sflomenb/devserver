@@ -1,3 +1,3 @@
 build: Dockerfile
 	@touch $@
-	docker build -t sflomenb/ubuntu .
+	docker build -t sflomenb/shell .
