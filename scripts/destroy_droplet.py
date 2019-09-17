@@ -37,8 +37,6 @@ def droplet_on(droplet_id):
         headers=HEADERS)
     req.raise_for_status()
     data = req.json()
-    print()
-    print(json.dumps(data, indent=2))
     return data['droplet']['status'] == 'active'
 
 def wait_for_droplet(droplet_id):
