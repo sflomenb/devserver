@@ -39,7 +39,7 @@ def droplet_on(droplet_id):
     req = requests.get(BASE + '/v2/droplets/' + str(droplet_id),
         headers=HEADERS)
     req.raise_for_status()
-    return req.json()['status'] == 'active'
+    return req.json()['droplet']['status'] == 'active'
 
 def wait_for_droplet(droplet_id):
     msg = 'Waiting for droplet'
@@ -47,7 +47,7 @@ def wait_for_droplet(droplet_id):
     while not droplet_on(droplet_id):
         print(msg)
         time.sleep(10)
-    print('Droplet ' + droplet_id + ' is available')
+    print('Droplet ' + str(droplet_id) + ' is available')
 
 def add_droplet_to_firewall(firewall_id, droplet_id):
     payload = {'droplet_ids' : [droplet_id]}
