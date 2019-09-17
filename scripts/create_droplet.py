@@ -102,7 +102,7 @@ def main():
     if not droplet_data:
         print('Creating droplet')
         droplet_data = create_droplet()
-        droplet_id = data.get('id')
+        droplet_id = droplet_data.get('id')
         wait_for_droplet(droplet_id)
         add_droplet_to_firewall(get_firewall(), droplet_id)
     else:
