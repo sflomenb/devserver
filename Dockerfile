@@ -77,7 +77,7 @@ RUN git clone https://github.com/git/git.git official_git \
         /root/.gitconfig && cd - \
     && rm -rf official_git
 # install terraform
-RUN VERSION='0.12.8' \
+RUN VERSION='0.12.9' \
     && apt-get install unzip \
     && wget https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip \
     && unzip terraform_${VERSION}_linux_amd64.zip \
