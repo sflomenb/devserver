@@ -104,7 +104,7 @@ def main():
         droplet_data = create_droplet()
         droplet_id = droplet_data.get('id')
         wait_for_droplet(droplet_id)
-        add_droplet_to_firewall(get_firewall(), droplet_id)
+        add_droplet_to_firewall(get_firewall().get('id'), droplet_id)
     else:
         print('Droplet ' + DROPLET_NAME + ' already exists')
     get_droplet_ip_address(droplet_data)
