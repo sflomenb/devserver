@@ -8,5 +8,8 @@ build: Dockerfile
 	docker build -t ${IMG} .
 	docker tag ${IMG} ${LATEST}
 
+test:
+	bundle exec rspec spec/devserver_spec.rb
+
 push:
 	@docker push ${NAME}
