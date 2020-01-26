@@ -13,8 +13,18 @@ def main():
 
     droplet_data = client.get_droplet(client.droplet_name)
     if not droplet_data:
-        print('Creating droplet')
-        droplet_data = client.create_droplet()
+        # check if we have snapshot
+        snapshots = client.get_droplet_snapshots()
+        image = None
+        has_droplet_snapshot = client.has_droplet_snapshot(snapshots)
+        if has_droplet_snapshot:
+            print('Creating from snapshot')
+            image = int(has_droplet_snapshot[0].get('id'))
+        else:
+            print('Creating droplet')
+            image = 'docker-18-04'
+        print(image)
+        droplet_data = client.create_droplet(image)
         droplet_id = droplet_data.get('id')
         client.wait_for_droplet(droplet_id, True)
         client.add_droplet_to_firewall(client.get_firewall().get('id'), droplet_id)

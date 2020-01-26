@@ -1,3 +1,4 @@
+import datetime
 import json
 import requests
 import time
@@ -84,7 +85,7 @@ class DigitalOceanClient():
             json=payload)
         req.raise_for_status()
 
-    def get_droplet_info(self):
+    def get_droplet_info(self, image):
         ssh_key_id = self.get_ssh_key()
 
         user_data = '''#!/bin/bash
@@ -96,16 +97,16 @@ class DigitalOceanClient():
         payload = {'name'      : self.droplet_name,
                    'region'    : 'nyc1',
                    'size'      : 's-1vcpu-1gb',
-                   'image'     : 'docker-18-04',
+                   'image'     : image,
                    'ssh_keys'  : [ssh_key_id],
                    'user_data' : user_data
         }
 
         return payload
 
-    def create_droplet(self):
+    def create_droplet(self, image):
         create_droplet_req = self.session.post(self.BASE_URL + "/v2/droplets",
-            json=self.get_droplet_info())
+            json=self.get_droplet_info(image))
         create_droplet_req.raise_for_status()
 
         return create_droplet_req.json()['droplet']
@@ -140,3 +141,52 @@ class DigitalOceanClient():
         req = self.session.delete(f'{self.BASE_URL}/v2/droplets/{droplet_id}')
         req.raise_for_status()
         print(req.status_code)
+
+    def snapshot(self, droplet_id):
+        print("Taking snapshot...")
+        snapshot_name = self.droplet_name + '_' + str(datetime.datetime.now()).replace(' ', '_')
+        req = self.session.post(f'{self.BASE_URL}/v2/droplets/{droplet_id}/actions',
+                json={'type': 'snapshot', \
+                        'name': snapshot_name})
+        req.raise_for_status()
+        print(req.status_code)
+        data = req.json().get('action')
+        action_id = data.get('id')
+        completed_at = data.get('completed_at')
+        msg = 'Creating snapshot...'
+        while not completed_at:
+            print(msg)
+            time.sleep(10)
+            action_request = self.session.get(f'{self.BASE_URL}/v2/droplets/{droplet_id}/actions/{action_id}')
+            action_request.raise_for_status()
+            print(action_request.status_code)
+            data = action_request.json().get('action')
+            completed_at = data.get('completed_at')
+        print(f'Snapshotted {droplet_id} with name {snapshot_name} at {completed_at}')
+        return snapshot_name
+
+    def get_droplet_snapshots(self):
+        print("Looking for snapshot")
+        req = self.session.get(f'{self.BASE_URL}/v2/snapshots',
+                params={'resource_type': 'droplet'})
+        req.raise_for_status()
+        print(req.status_code)
+        return req.json().get('snapshots')
+
+    def has_droplet_snapshot(self, snapshots):
+        return [i for i in snapshots if self.droplet_name in i.get('name')]
+
+    def delete_snapshot(self, snapshot):
+        snapshot_id = snapshot.get('id')
+        print(f'Deleting snapshot {snapshot_id}, {snapshot.get("name")}')
+        req = self.session.delete(f'{self.BASE_URL}/v2/snapshots/{snapshot_id}')
+        req.raise_for_status()
+        print(req.status_code)
+
+    # delete devserver snapshots except the one just created
+    def clean_snapshots(self, snapshot_name):
+        snapshots = self.get_droplet_snapshots()
+        for snapshot in snapshots:
+            name = snapshot.get('name')
+            if 'dev-server' in name and name != snapshot_name:
+                self.delete_snapshot(snapshot)
