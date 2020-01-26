@@ -8,8 +8,14 @@ build: Dockerfile
 	docker build -t ${IMG} .
 	docker tag ${IMG} ${LATEST}
 
+.PHONY: test
 test:
 	bundle exec rspec spec/devserver_spec.rb
 
+.PHONY: push
 push:
 	@docker push ${NAME}
+
+.PHONY: copy
+copy:
+	cp scripts/*.py /Users/sflomenb/Library/Mobile\ Documents/iCloud\~com\~omz-software\~Pythonista3/Documents/devserver/
