@@ -4,18 +4,17 @@ import requests
 import sys
 
 BASE = 'https://api.digitalocean.com'
-HEADERS = {}
 
-def get_firewall():
+def get_firewall(session):
 
-    list_req = requests.get(BASE + "/v2/firewalls", headers=HEADERS)
+    list_req = session.get(BASE + "/v2/firewalls")
     list_req.raise_for_status()
 
     data = list_req.json()
 
     return data.get('firewalls')[0]
 
-def add_ip_to_firewall(ip_addr, firewall):
+def add_ip_to_firewall(session, ip_addr, firewall):
 
     print('Adding IP ' + ip_addr + ' to firewall')
 
@@ -50,8 +49,7 @@ def add_ip_to_firewall(ip_addr, firewall):
 
     print(json.dumps(firewall_data, indent=2))
 
-    add_ip_req = requests.put(BASE + "/v2/firewalls/" + firewall_id,
-                    headers=HEADERS,
+    add_ip_req = session.put(BASE + "/v2/firewalls/" + firewall_id,
                     json=firewall_data)
     print(add_ip_req.text)
     add_ip_req.raise_for_status()
@@ -66,7 +64,6 @@ def ip_in_cur_firewall(inbound_rules, ip_addr):
     return ips
 
 def main():
-    global HEADERS
     if len(sys.argv) >= 3:
         IP_ADDR = sys.argv[1]
         TOKEN = sys.argv[2]
@@ -74,14 +71,15 @@ def main():
         print('Please enter an IP address and/or token')
         sys.exit(1)
 
-    HEADERS = {'Authorization': 'Bearer ' + TOKEN}
+    session = requests.Session()
+    session.headers.update({'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json'})
 
-    firewall = get_firewall()
+    firewall = get_firewall(session)
 
     inbound_rules = firewall.get('inbound_rules')
 
     if not ip_in_cur_firewall(inbound_rules, IP_ADDR):
-        add_ip_to_firewall(IP_ADDR, firewall)
+        add_ip_to_firewall(session, IP_ADDR, firewall)
     else:
         print('IP ' + IP_ADDR + ' is part of firewall, nothing to do')
 

@@ -5,12 +5,10 @@ import sys
 import time
 
 BASE = 'https://api.digitalocean.com'
-HEADERS = {}
 DROPLET_NAME = 'dev-server'
 
-def get_droplet(name):
-    req = requests.get(BASE + '/v2/droplets/',
-        headers=HEADERS)
+def get_droplet(session, name):
+    req = session.get(BASE + '/v2/droplets/')
     req.raise_for_status()
     data = req.json()
     for droplet in data.get('droplets'):
@@ -19,27 +17,24 @@ def get_droplet(name):
     print('Unable to get droplet with name ' + name)
     sys.exit(1)
 
-def shut_down(droplet_id):
-    req = requests.post(BASE + '/v2/droplets/' + droplet_id + '/actions',
-        headers=HEADERS,
+def shut_down(session, droplet_id):
+    req = session.post(BASE + '/v2/droplets/' + droplet_id + '/actions',
         json={'type': 'shutdown'})
     req.raise_for_status()
 
-def power_off(droplet_id):
-    req = requests.post(BASE + '/v2/droplets/' + droplet_id + '/actions',
-        headers=HEADERS,
+def power_off(session, droplet_id):
+    req = session.post(BASE + '/v2/droplets/' + droplet_id + '/actions',
         json={'type': 'power_off'})
     print(req.url)
     req.raise_for_status()
 
-def droplet_on(droplet_id):
-    req = requests.get(BASE + '/v2/droplets/' + droplet_id,
-        headers=HEADERS)
+def droplet_on(session, droplet_id):
+    req = session.get(BASE + '/v2/droplets/' + droplet_id)
     req.raise_for_status()
     data = req.json()
     return data['droplet']['status'] == 'active'
 
-def wait_for_droplet(droplet_id):
+def wait_for_droplet(session, droplet_id):
     msg = 'Waiting for droplet'
     print(msg)
     while droplet_on(droplet_id):
@@ -47,14 +42,12 @@ def wait_for_droplet(droplet_id):
         time.sleep(10)
     print('Droplet ' + droplet_id + ' is off')
 
-def delete(droplet_id):
-    req = requests.delete(BASE + '/v2/droplets/' + droplet_id,
-        headers=HEADERS)
+def delete(session, droplet_id):
+    req = session.delete(BASE + '/v2/droplets/' + droplet_id)
     req.raise_for_status()
     print(req.status_code)
 
-def destroy_droplet():
-
+def destroy_droplet(session):
     droplet_id = get_droplet(DROPLET_NAME)
 
     power_off(droplet_id)
@@ -62,16 +55,16 @@ def destroy_droplet():
     delete(droplet_id)
 
 def main():
-    global HEADERS
     if len(sys.argv) >= 2:
         TOKEN = sys.argv[1]
     else:
         print('Please enter a token')
         sys.exit(1)
 
-    HEADERS = {'Authorization': 'Bearer ' + TOKEN}
+    session = requests.Session()
+    session.headers.update({'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json'})
 
-    destroy_droplet()
+    destroy_droplet(session)
 
 if __name__ == '__main__':
     main()
