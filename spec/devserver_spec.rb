@@ -20,7 +20,7 @@ describe 'My Dockerfile' do
       end
       describe 'vim is set up' do
         describe command('vim --version') do
-          its(:stdout) { should match('VIM - Vi IMproved 8.1') }
+          its(:stdout) { should match('VIM - Vi IMproved 8.2') }
           its(:exit_status) { should eq 0 }
         end
         describe file('/root/.vimrc') do
