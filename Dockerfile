@@ -22,11 +22,6 @@ RUN chsh -s /usr/bin/zsh
 # install rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 RUN curl -Lo install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh && sh install.sh --unattended && rm install.sh && mkdir -p /root/.oh-my-zsh/custom/plugins && cd /root/.oh-my-zsh/custom/plugins && git clone https://github.com/softmoth/zsh-vim-mode.git && cd -
-# install yarn for coc.nvim extensions
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-	&& apt update \
-	&& apt install yarn
 # install vim
 RUN git clone https://github.com/vim/vim.git \
     && cd vim \
@@ -42,11 +37,15 @@ RUN git clone https://github.com/vim/vim.git \
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 RUN mkdir /root/.bin && git clone https://github.com/sflomenb/dotfiles.git && cd dotfiles && make all && cd ..
-# install solargraph for coc-colargraph
-RUN gem install solargraph
-RUN npm i intelephense -g
+# install yarn for coc.nvim extensions
 # install vim plugins from .vimrc with vim-plug, and coc-extension
-RUN vim -c 'PlugInstall | qa' \
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+	&& apt update \
+	&& apt install yarn \
+    && gem install solargraph \
+    && npm i -g  intelephense bash-language-server \
+    && vim -c 'PlugInstall | qa' \
     && mkdir -p /root/.config/coc/extensions \
     && cd /root/.config/coc/extensions \
     && if [ ! -f package.json ]; then echo '{"dependencies":{}}'> package.json; fi \
