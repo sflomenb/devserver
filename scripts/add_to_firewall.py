@@ -18,7 +18,7 @@ def main():
         print('Please enter an IP address and/or token')
         sys.exit(1)
 
-    client = DigitalOceanClient(TOKEN)
+    client = digital_ocean_client.DigitalOceanClient(TOKEN)
 
     firewall = client.get_firewall()
 

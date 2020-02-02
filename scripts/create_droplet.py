@@ -1,7 +1,6 @@
 import sys
 import digital_ocean_client
 
-
 def main():
     if len(sys.argv) >= 2:
         TOKEN = sys.argv[1]
