@@ -1,3 +1,4 @@
+import argparse
 import sys
 import digital_ocean_client
 
@@ -18,11 +19,11 @@ def destroy_droplet(client):
     print('Droplet destroyed')
 
 def main():
-    if len(sys.argv) >= 2:
-        TOKEN = sys.argv[1]
-    else:
-        print('Please enter a token')
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Destroy devserver droplet')
+    parser.add_argument('token', help='Digtal Ocean API token')
+    args = parser.parse_args()
+
+    TOKEN = args.token
 
     client = digital_ocean_client.DigitalOceanClient(TOKEN)
 
