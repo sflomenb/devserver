@@ -5,11 +5,16 @@ import digital_ocean_client
 def main():
     parser = argparse.ArgumentParser(description='Create devserver droplet')
     parser.add_argument('token', help='Digtal Ocean API token')
+    parser.add_argument('--name', help='droplet name')
     args = parser.parse_args()
 
     TOKEN = args.token
+    name = args.name
 
-    client = digital_ocean_client.DigitalOceanClient(TOKEN)
+    if name:
+        client = digital_ocean_client.DigitalOceanClient(TOKEN, name)
+    else:
+        client = digital_ocean_client.DigitalOceanClient(TOKEN)
 
     droplet_data = client.get_droplet(client.droplet_name)
     if not droplet_data:

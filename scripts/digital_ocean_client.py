@@ -93,6 +93,7 @@ class DigitalOceanClient():
         return payload
 
     def create_droplet(self, image):
+        print(f'Using name {self.droplet_name}')
         data = self.rest_client.post_json(self.BASE_URL + "/v2/droplets",
             json=self.get_droplet_info(image))
 
@@ -162,5 +163,5 @@ class DigitalOceanClient():
         snapshots = self.get_droplet_snapshots()
         for snapshot in snapshots:
             name = snapshot.get('name')
-            if 'dev-server' in name and name != snapshot_name:
+            if self.droplet_name in name and name != snapshot_name:
                 self.delete_snapshot(snapshot)

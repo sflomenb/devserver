@@ -1,7 +1,6 @@
 import pytest
 import requests
 import sys
-import mock_response
 import requests_mock
 from mock_response import *
 from scripts import create_droplet
@@ -69,18 +68,24 @@ class MockGetFirewall(MockResponse):
           }
         }
 
-@pytest.fixture(params=[['script.py', 'TOKEN'], \
-        pytest.param(['script.py'], marks=pytest.mark.xfail), \
-        pytest.param([], marks=pytest.mark.xfail)])
+@pytest.fixture(params=[
+    ['script.py', 'TOKEN'], \
+    ['script.py', 'TOKEN', '--name', 'my-droplet'], \
+    pytest.param(['script.py'], marks=pytest.mark.xfail), \
+    pytest.param([], marks=pytest.mark.xfail)])
 def mock_sys(monkeypatch, request):
     monkeypatch.setattr(sys, 'argv', request.param)
 
 def test_create_droplet_found(mock_sys, mock_droplet, capsys):
     create_droplet.main()
     captured = capsys.readouterr()
-    assert 'Droplet dev-server already exists' in captured.out
+    name_to_assert = sys.argv[-1] if '--name' in sys.argv  else 'dev-server'
+    assert f'Droplet {name_to_assert} already exists' in captured.out
 
-@pytest.mark.parametrize('mock_get_snapshots,expected_text', [[MockGetSnapshots(), 'Creating from snapshot'], [MockGetSnapshotsWithoutDevServer(), 'Creating droplet']])
+@pytest.mark.parametrize('mock_get_snapshots,expected_text', [
+    [MockGetSnapshots(), 'Creating from snapshot'],
+    [MockGetSnapshotsWithoutDevServer(), 'Creating droplet']
+])
 def test_create_droplet_not_found(mock_sys, monkeypatch, capsys, mocker, mock_get_snapshots, expected_text, **kwargs):
     def mock_get(*args, **kwargs):
         url = args[1]
@@ -102,6 +107,11 @@ def test_create_droplet_not_found(mock_sys, monkeypatch, capsys, mocker, mock_ge
     mocker.patch('create_droplet.digital_ocean_client.DigitalOceanClient.get_droplet', side_effect=[None, MockDropletFound().json().get('droplets')[1]])
     create_droplet.main()
     captured = capsys.readouterr()
-    assert expected_text in captured.out
+    if '--name' in sys.argv:
+        name_to_assert = sys.argv[-1]
+    else:
+        name_to_assert = 'dev-server'
+        assert expected_text in captured.out
+    assert f'Using name {name_to_assert}' in captured.out
     assert '104.236.32.182' in captured.out
 

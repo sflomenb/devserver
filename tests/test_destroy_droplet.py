@@ -7,6 +7,7 @@ from mock_response import *
 from scripts import destroy_droplet
 
 @pytest.fixture(params=[['script.py', 'TOKEN'], \
+        ['script.py', 'TOKEN', '--name', 'my-droplet'], \
         pytest.param(['script.py'], marks=pytest.mark.xfail), \
         pytest.param([], marks=pytest.mark.xfail)])
 def mock_sys(monkeypatch, request):
@@ -45,6 +46,9 @@ def test_destroy_droplet(mock_get_droplet, expected_text, monkeypatch, mocker, c
     captured = capsys.readouterr()
     for text in expected_text:
         assert text in captured.out
+
+    name_to_assert = sys.argv[-1] if '--name' in sys.argv  else 'dev-server'
+    assert f'Destroying droplet {name_to_assert}' in captured.out
 
 def test_main(mock_sys, mocker):
     mocker.patch('scripts.destroy_droplet.destroy_droplet')

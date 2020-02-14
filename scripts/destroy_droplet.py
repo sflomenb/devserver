@@ -10,6 +10,7 @@ def destroy_droplet(client):
         sys.exit(1)
     if not droplet_id:
         sys.exit(1)
+    print(f'Destroying droplet {client.droplet_name}')
     print(f'Droplet ID:{droplet_id}')
     client.power_off(droplet_id)
     client.wait_for_droplet(droplet_id, False)
@@ -21,11 +22,13 @@ def destroy_droplet(client):
 def main():
     parser = argparse.ArgumentParser(description='Destroy devserver droplet')
     parser.add_argument('token', help='Digtal Ocean API token')
+    parser.add_argument('--name', help='droplet name')
     args = parser.parse_args()
 
     TOKEN = args.token
+    name = args.name
 
-    client = digital_ocean_client.DigitalOceanClient(TOKEN)
+    client = digital_ocean_client.DigitalOceanClient(TOKEN, name)
 
     destroy_droplet(client)
 
