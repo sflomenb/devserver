@@ -13,11 +13,13 @@ from scripts import destroy_droplet
 def mock_sys(monkeypatch, request):
     monkeypatch.setattr(sys, 'argv', request.param)
 
-@pytest.mark.parametrize('mock_get_droplet,expected_text', [
-    [MockDropletFound(),['Droplet ID:','Droplet destroyed']], \
-    pytest.param(MockDropletNotFound(), None, marks=pytest.mark.xfail)
+@pytest.mark.parametrize('mock_get_droplet,expected_text,should_skip_snapshots', [
+    [MockDropletFound(),['Droplet ID:','Droplet destroyed'], False], \
+    [MockDropletFound(),['Droplet ID:','Droplet destroyed'], True], \
+    pytest.param(MockDropletNotFound(), None, False, marks=pytest.mark.xfail), \
+    pytest.param(MockDropletNotFound(), None, True, marks=pytest.mark.xfail) \
 ])
-def test_destroy_droplet(mock_get_droplet, expected_text, monkeypatch, mocker, capsys, do_client):
+def test_destroy_droplet(mock_get_droplet, expected_text, should_skip_snapshots, monkeypatch, mocker, capsys, do_client):
     mock_snapshot = MockSnapshotAndAction()
     def mock_get(*args, **kwargs):
         url = args[1]
@@ -42,13 +44,14 @@ def test_destroy_droplet(mock_get_droplet, expected_text, monkeypatch, mocker, c
     monkeypatch.setattr(requests.sessions.Session, "post", mock_post)
     monkeypatch.setattr(requests.sessions.Session, "delete", mock_delete)
     mocker.patch('scripts.digital_ocean_client.DigitalOceanClient.droplet_on', side_effect=[True, True, False])
-    destroy_droplet.destroy_droplet(do_client)
+    destroy_droplet.destroy_droplet(do_client, should_skip_snapshots)
     captured = capsys.readouterr()
     for text in expected_text:
         assert text in captured.out
 
     name_to_assert = sys.argv[-1] if '--name' in sys.argv  else 'dev-server'
     assert f'Destroying droplet {name_to_assert}' in captured.out
+    assert ('Creating snapshot...' in captured.out) ^ should_skip_snapshots
 
 def test_main(mock_sys, mocker):
     mocker.patch('scripts.destroy_droplet.destroy_droplet')
