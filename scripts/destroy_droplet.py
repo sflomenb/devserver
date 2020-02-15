@@ -31,7 +31,10 @@ def main():
     name = args.name
     name = args.skip_snapshots
 
-    client = digital_ocean_client.DigitalOceanClient(TOKEN, name)
+    if name:
+        client = digital_ocean_client.DigitalOceanClient(TOKEN, name)
+    else:
+        client = digital_ocean_client.DigitalOceanClient(TOKEN)
 
     destroy_droplet(client, args.skip_snapshots)
 
