@@ -21,7 +21,7 @@ sudo apt-get install -qy \
     default-jdk \
     git \
     jq \
-    libz-dev \ # dep for solargraph
+    libz-dev \
     nodejs \
     npm \
     perl \
