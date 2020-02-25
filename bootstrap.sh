@@ -37,7 +37,7 @@ sudo apt-get install -qy \
     unzip \
     vim-gtk3 \
     wget \
-    yarnpkg \
+    yarn \
     zsh
 
 rm -rf /var/lib/apt/lists/*
