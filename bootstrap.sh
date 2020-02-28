@@ -22,6 +22,7 @@ sudo apt-get install -qy \
     git \
     jq \
     libz-dev \
+    maven \
     nodejs \
     npm \
     perl \
