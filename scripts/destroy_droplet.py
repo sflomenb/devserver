@@ -1,8 +1,10 @@
 import argparse
 import sys
+from datetime import datetime
 import digital_ocean_client
 
 def destroy_droplet(client, skip_snapshots):
+    start=datetime.now()
     droplet_info = client.get_droplet(client.droplet_name)
     if droplet_info:
         droplet_id = droplet_info.get('id')
@@ -19,6 +21,7 @@ def destroy_droplet(client, skip_snapshots):
         client.clean_snapshots(snapshot_name)
     client.delete(droplet_id)
     print('Droplet destroyed')
+    print(datetime.now()-start)
 
 def main():
     parser = argparse.ArgumentParser(description='Destroy devserver droplet')
@@ -29,7 +32,6 @@ def main():
 
     TOKEN = args.token
     name = args.name
-    name = args.skip_snapshots
 
     if name:
         client = digital_ocean_client.DigitalOceanClient(TOKEN, name)

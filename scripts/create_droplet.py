@@ -1,8 +1,10 @@
 import argparse
 import sys
+from datetime import datetime
 import digital_ocean_client
 
 def main():
+    start=datetime.now()
     parser = argparse.ArgumentParser(description='Create devserver droplet')
     parser.add_argument('token', help='Digtal Ocean API token')
     parser.add_argument('--name', help='droplet name')
@@ -36,6 +38,7 @@ def main():
     else:
         print('Droplet ' + client.droplet_name + ' already exists')
     client.get_droplet_ip_address(client.get_droplet(client.droplet_name))
+    print(datetime.now()-start)
 
 if __name__ == '__main__':
     main()
