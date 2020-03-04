@@ -68,6 +68,7 @@ if ! [[ -f ~/.vimrc ]]; then
 fi
 
 ! [[ -x "$(command -v solargraph)" ]] && gem install solargraph
+! [[ -x "$(command -v vue)" ]] && npm i -g @vue/cli
 ! [[ -x "$(command -v bash-language-server)" ]] && npm i -g bash-language-server
 ! [[ -x "$(command -v intelephense)" ]] && npm i -g intelephense
 ! [[ -x "$(command -v docker-langserver)" ]] && npm install -g dockerfile-language-server-nodejs
