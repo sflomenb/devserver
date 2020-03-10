@@ -111,7 +111,7 @@ if ! [[ -x "$(command -v terraform)" ]]; then
 fi
 
 if ! [[ -x "$(command -v go)" || -x "/usr/local/go/bin" ]]; then
-    export VERSION='1.13'
+    export VERSION='1.14'
     wget "https://dl.google.com/go/go${VERSION}.linux-amd64.tar.gz"
     tar -C /usr/local -xzf "go${VERSION}.linux-amd64.tar.gz"
     rm -f go${VERSION}.linux-amd64.tar.gz
