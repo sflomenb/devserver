@@ -33,6 +33,7 @@ sudo apt-get install -qy \
     python3-venv \
     ruby-dev \
     rubygems \
+    shellcheck \
     stow \
     tmux \
     tree \
