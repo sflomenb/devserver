@@ -86,6 +86,7 @@ if ! [[ -f ~/.vim/autoload/plug.vim ]]; then
         coc-json \
         coc-pairs \
         coc-python \
+        coc-rls \
         coc-rust-analyzer \
         coc-solargraph \
         coc-tsserver \
