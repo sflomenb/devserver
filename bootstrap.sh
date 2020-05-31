@@ -27,7 +27,6 @@ sudo apt-get install -qy \
     npm \
     perl \
     perl-doc \
-    php \
     python3 \
     python3-pip \
     python3-venv \
@@ -72,7 +71,6 @@ fi
 ! [[ -x "$(command -v solargraph)" ]] && gem install solargraph
 ! [[ -x "$(command -v vue)" ]] && npm i -g @vue/cli
 ! [[ -x "$(command -v bash-language-server)" ]] && npm i -g bash-language-server
-! [[ -x "$(command -v intelephense)" ]] && npm i -g intelephense
 ! [[ -x "$(command -v docker-langserver)" ]] && npm install -g dockerfile-language-server-nodejs
 
 if ! [[ -f ~/.vim/autoload/plug.vim ]]; then
@@ -87,7 +85,6 @@ if ! [[ -f ~/.vim/autoload/plug.vim ]]; then
         coc-java \
         coc-json \
         coc-pairs \
-        coc-phpls \
         coc-python \
         coc-rust-analyzer \
         coc-solargraph \
