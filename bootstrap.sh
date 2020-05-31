@@ -101,7 +101,7 @@ if ! [[ -x "$(command -v rustc)" ]]; then
 fi
 
 if ! [[ -x "$(command -v terraform)" ]]; then
-    export VERSION='0.12.9'
+    export VERSION='0.12.21'
     wget "https://releases.hashicorp.com/terraform/${VERSION}/terraform_${VERSION}_linux_amd64.zip"
     unzip "terraform_${VERSION}_linux_amd64.zip"
     chmod +x terraform
