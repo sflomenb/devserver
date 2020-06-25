@@ -18,4 +18,4 @@ push:
 
 .PHONY: copy
 copy:
-	cp scripts/*.py /Users/sflomenb/Library/Mobile\ Documents/iCloud\~com\~omz-software\~Pythonista3/Documents/devserver/
+	cp bootstrap.sh scripts/*.py /Users/sflomenb/Library/Mobile\ Documents/iCloud\~com\~omz-software\~Pythonista3/Documents/devserver/
