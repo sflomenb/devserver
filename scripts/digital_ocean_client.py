@@ -2,6 +2,7 @@ import datetime
 import json
 import time
 import rest_client
+import os
 
 class DigitalOceanClient():
     BASE_URL = 'https://api.digitalocean.com'
@@ -81,6 +82,11 @@ class DigitalOceanClient():
         apt install update && apt install upgrade
         apt install -y mosh
         sudo ufw allow 60000:60020/udp'''
+        
+        if os.path.exists('bootstrap.sh'):
+            with open('bootstrap.sh') as f:
+                user_data = ''.join(f.read())
+        
 
         payload = {'name'      : self.droplet_name,
                    'region'    : 'nyc1',

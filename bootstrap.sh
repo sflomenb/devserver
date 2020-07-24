@@ -16,6 +16,8 @@ if [ "${UPGRADE_PACKAGES}" != "none" ]; then
     sudo apt-get upgrade -y
 fi
 
+sudo ufw allow 60000:60020/udp
+
 sudo apt-get install -qy \
     curl \
     default-jdk \
@@ -23,6 +25,7 @@ sudo apt-get install -qy \
     jq \
     libz-dev \
     maven \
+    mosh \
     nodejs \
     npm \
     perl \
