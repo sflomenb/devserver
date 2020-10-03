@@ -90,6 +90,7 @@ if ! [[ -f ~/.vim/autoload/plug.vim ]]; then
         coc-rust-analyzer \
         coc-solargraph \
         coc-tsserver \
+        coc-vetur \
         coc-yaml
     popd
 fi
