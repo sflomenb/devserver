@@ -23,6 +23,7 @@ sudo apt-get install -qy \
     jq \
     libz-dev \
     maven \
+    mosh \
     nodejs \
     npm \
     perl \
@@ -43,6 +44,8 @@ sudo apt-get install -qy \
     zsh
 
 rm -rf /var/lib/apt/lists/*
+
+sudo ufw allow 60000:60020/udp
 
 [[ ${SHELL} =~ zsh ]] || chsh -s /usr/bin/zsh
 
