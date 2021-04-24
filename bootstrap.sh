@@ -19,6 +19,7 @@ fi
 sudo apt-get install -qy \
     curl \
     default-jdk \
+    emacs \
     git \
     jq \
     libz-dev \
